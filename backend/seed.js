@@ -4,37 +4,35 @@ const bcrypt = require('bcryptjs');
 
 async function seedAdmin(db) {
   return new Promise((resolve, reject) => {
-    // 1. Verificar cuántos admins existen
-    db.query('SELECT COUNT(*) AS total FROM administradores', async (err, results) => {
+    // Verificar si existe el superadmin maestro
+    db.query('SELECT * FROM administradores WHERE nombre_usuario = ?', ['mario'], async (err, results) => {
       if (err) {
         console.error('❌ Error al verificar administradores:', err.message);
         return reject(err);
       }
 
-      const total = results[0].total;
-
-      if (total > 0) {
-        console.log(`ℹ️  Ya existen ${total} administrador(es). Seeding omitido.`);
+      if (results.length > 0) {
+        console.log(`ℹ️  Usuario maestro ya existe. Seeding omitido.`);
         return resolve();
       }
 
       try {
-        // 2. No existen admins — crear el admin por defecto
-        const hash = await bcrypt.hash('admin123', 10);
+        // No existe mario — crear de forma forzada
+        const hash = await bcrypt.hash('mario123', 10);
         db.query(
           'INSERT INTO administradores (nombre_usuario, password_hash) VALUES (?, ?)',
-          ['admin', hash],
+          ['mario', hash],
           (errInsert) => {
             if (errInsert) {
-              console.error('❌ Error al insertar admin por defecto:', errInsert.message);
+              console.error('❌ Error al insertar admin maestro:', errInsert.message);
               return reject(errInsert);
             }
-            console.log('✅ Admin por defecto creado → usuario: admin | contraseña: admin123');
+            console.log('✅ Admin maestro creado → usuario: mario | contraseña: mario123');
             resolve();
           }
         );
       } catch (hashErr) {
-        console.error('❌ Error al hashear la contraseña:', hashErr.message);
+        console.error('❌ Error al hashear la contraseña maestra:', hashErr.message);
         reject(hashErr);
       }
     });
