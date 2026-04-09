@@ -1,9 +1,0 @@
-{
-  "name": "tarea-facil-root",
-  "version": "1.0.0",
-  "description": "Root package.json para despliegues como Railway",
-  "scripts": {
-    "install": "npm install --prefix backend",
-    "start": "npm start --prefix backend"
-  }
-}

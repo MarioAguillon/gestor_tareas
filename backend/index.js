@@ -35,6 +35,11 @@ app.use(cors({
 
 app.use(express.json());
 
+// Healthcheck — Railway necesita esto para confirmar que la app responde
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', mensaje: 'Tarea Fácil API funcionando' });
+});
+
 // ─────────────────────────────────────────────
 // 3. CONEXIÓN A MYSQL
 // ─────────────────────────────────────────────
