@@ -1,0 +1,8 @@
+[build]
+builder = "NIXPACKS"
+watchPatterns = ["backend/**"]
+
+[deploy]
+startCommand = "cd backend && npm run start"
+healthcheckPath = "/tareas"
+healthcheckTimeout = 100
