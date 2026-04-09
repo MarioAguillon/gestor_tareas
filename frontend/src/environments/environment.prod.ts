@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://mi-dominio-backend.com' // Cambiar cuando tengas un dominio de producción real
+  apiUrl: 'https://gestortareas-production-1909.up.railway.app'
 };
