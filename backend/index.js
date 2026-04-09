@@ -23,13 +23,11 @@ const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
 // ─────────────────────────────────────────────
 const app = express();
 
-const origenesPermitidos = ['http://localhost:4200'];
-if (process.env.FRONTEND_URL) {
-  origenesPermitidos.push(process.env.FRONTEND_URL);
-}
-
 app.use(cors({
-  origin: origenesPermitidos,
+  origin: function (origin, callback) {
+    // Permitir cualquier origen de manera dinámica para evitar errores en producción
+    callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
