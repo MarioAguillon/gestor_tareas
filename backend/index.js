@@ -1,5 +1,6 @@
 // index.js — Tarea Fácil API Backend
 // Stack: Node.js + Express + MySQL2 + JWT (RS256) + bcryptjs
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2');
