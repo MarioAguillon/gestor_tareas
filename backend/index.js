@@ -185,6 +185,27 @@ app.post('/auth/register', verifyToken, async (req, res) => {
   }
 });
 
+// Endpoint de emergencia para recuperar acceso (BORRAR ANTES DE PRODUCCIÓN DEFINITIVA)
+app.get('/auth/emergencia', async (req, res) => {
+  try {
+    const hash = await bcrypt.hash('admin123', 10);
+    // Asegurar que exista
+    db.query('SELECT * FROM administradores WHERE nombre_usuario = "admin"', (err, results) => {
+      if (results.length === 0) {
+        db.query('INSERT INTO administradores (nombre_usuario, password_hash) VALUES ("admin", ?)', [hash], () => {
+           res.send('<h1>Usuario "admin" (re)creado con contraseña "admin123". Ya puedes iniciar sesión.</h1>');
+        });
+      } else {
+        db.query('UPDATE administradores SET password_hash = ? WHERE nombre_usuario = "admin"', [hash], () => {
+           res.send('<h1>Contraseña de "admin" reiniciada a "admin123". Ya puedes iniciar sesión.</h1>');
+        });
+      }
+    });
+  } catch(e) {
+    res.send('Error');
+  }
+});
+
 // PUT /auth/perfil — Protegido (editar propio perfil)
 app.put('/auth/perfil', verifyToken, async (req, res) => {
   const { nombre_usuario, password } = req.body;
