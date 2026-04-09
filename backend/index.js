@@ -356,9 +356,13 @@ app.delete('/tareas/:id', verifyToken, (req, res) => {
 // 8. ARRANQUE DEL SERVIDOR
 // ─────────────────────────────────────────────
 const port = process.env.PORT || 3000;
-app.listen(port, '0.0.0.0', () => {
-  console.log(`🚀 Servidor Tarea Fácil en http://0.0.0.0:${port}`);
-  console.log('📋 Endpoints públicos:  GET /tareas, POST /auth/login');
-  console.log('🔒 Endpoints privados:  POST /tareas, PUT /tareas/:id, DELETE /tareas/:id');
-  console.log('🔒 Endpoints privados:  POST /auth/register, PUT /auth/perfil');
-});
+
+// Exportar para Vercel Serverless
+module.exports = app;
+
+// Solo iniciamos el servidor si no estamos en entorno serverless de Vercel
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`🚀 Servidor Tarea Fácil local en http://0.0.0.0:${port}`);
+  });
+}
