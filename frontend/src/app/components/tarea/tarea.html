@@ -1,0 +1,103 @@
+<app-tarjeta>
+  <article [style.opacity]="tarea.completada === 1 ? 0.5 : 1">
+    <h2>{{ tarea.titulo }}</h2>
+    <time>{{ tarea.expira | date: 'fullDate' }}</time>
+    <p>{{ tarea.resumen }}</p>
+
+    <!-- Botones de acción — visibles solo para el administrador -->
+    <p class="acciones">
+      @if (isAdmin && tarea.completada === 0) {
+        <button class="btn-terminar" (click)="alCompletarTarea()" id="btn-terminar-{{ tarea.id }}">
+          Terminar
+        </button>
+      }
+      @if (isAdmin) {
+        <button class="btn-editar" (click)="alAbrirEdicion()" id="btn-editar-{{ tarea.id }}">
+          ✏️ Editar
+        </button>
+        <button class="btn-borrar" (click)="alBorrarTarea()" id="btn-borrar-{{ tarea.id }}">
+          Borrar
+        </button>
+      }
+    </p>
+  </article>
+</app-tarjeta>
+
+<!-- ── MODAL DE EDICIÓN (RF-D) ── -->
+@if (mostrarModalEdicion) {
+  <div class="fondo-modal" (click)="alCerrarEdicion()"></div>
+  <dialog open class="modal-edicion">
+    <h2>✏️ Editar Tarea</h2>
+
+    @if (isGuardando) {
+      <!-- Skeleton/spinner mientras PUT está en vuelo -->
+      <div class="skeleton-edicion">
+        <div class="sk-linea sk-linea--titulo"></div>
+        <div class="sk-linea sk-linea--texto"></div>
+        <div class="sk-linea sk-linea--texto"></div>
+        <div class="sk-linea sk-linea--corta"></div>
+      </div>
+    } @else {
+      <form [formGroup]="editForm" (ngSubmit)="alGuardarEdicion()">
+        <!-- Campo: Título -->
+        <p class="campo">
+          <label for="edit-titulo">Título</label>
+          <input
+            type="text"
+            id="edit-titulo"
+            formControlName="titulo"
+            autocomplete="off"
+          />
+          @if (campoTitulo?.touched && campoTitulo?.errors?.['required']) {
+            <span class="error-campo">El título es requerido</span>
+          }
+          @if (campoTitulo?.touched && campoTitulo?.errors?.['minlength']) {
+            <span class="error-campo">Mínimo 3 caracteres</span>
+          }
+        </p>
+
+        <!-- Campo: Resumen -->
+        <p class="campo">
+          <label for="edit-resumen">Descripción</label>
+          <textarea
+            id="edit-resumen"
+            rows="4"
+            formControlName="resumen"
+          ></textarea>
+          @if (campoResumen?.touched && campoResumen?.errors?.['required']) {
+            <span class="error-campo">La descripción es requerida</span>
+          }
+          @if (campoResumen?.touched && campoResumen?.errors?.['minlength']) {
+            <span class="error-campo">Mínimo 5 caracteres</span>
+          }
+        </p>
+
+        <!-- Campo: Fecha límite -->
+        <p class="campo">
+          <label for="edit-expira">Fecha Límite</label>
+          <input type="date" id="edit-expira" formControlName="expira" />
+        </p>
+
+        <!-- Error del backend — visible dentro del modal -->
+        @if (errorEdicion) {
+          <p class="error-backend" role="alert">⚠️ {{ errorEdicion }}</p>
+        }
+
+        <!-- Acciones del modal -->
+        <p class="acciones-modal">
+          <button type="button" class="btn-cancelar-edicion" (click)="alCerrarEdicion()" id="btn-cancelar-edicion">
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn-guardar"
+            [disabled]="isGuardando"
+            id="btn-guardar-edicion"
+          >
+            Guardar Cambios
+          </button>
+        </p>
+      </form>
+    }
+  </dialog>
+}

@@ -1,0 +1,247 @@
+<header>
+  <!-- Logo clicable → limpia selección de usuario -->
+  <img
+    src="img/listado-tareas-logo.png"
+    alt="Lista de Tareas"
+    (click)="alClickLogo()"
+    title="Volver al inicio"
+    id="logo-app"
+  />
+  <div class="titulo-bloque">
+    <h1>TAREA FÁCIL</h1>
+    <p>Administrador de Tareas ADSO</p>
+  </div>
+
+  <!-- ZONA DE SESIÓN -->
+  <div class="zona-sesion">
+    @if (isLoggedIn$ | async) {
+      <!-- MODO ADMINISTRADOR -->
+      <div class="admin-activo">
+        
+        <div class="menu-admin-container">
+          <button class="badge-admin" (click)="toggleOpcionesAdmin()">
+            🔐 {{ nombreAdmin$ | async }} ▼
+          </button>
+          
+          <!-- Dropdown Opciones -->
+          @if (mostrarOpcionesAdmin) {
+            <div class="dropdown-admin">
+              <button (click)="abrirEditarPerfil()">⚙️ Editar mi Perfil</button>
+              <button (click)="abrirCrearAdmin()">👤 Crear Admin</button>
+              <button (click)="abrirGestionarAdmins()">🗑️ Gestionar Admins</button>
+            </div>
+          }
+        </div>
+
+        <button class="btn-logout" (click)="alCerrarSesion()" id="btn-cerrar-sesion">
+          Cerrar Sesión
+        </button>
+      </div>
+    } @else {
+      <!-- MODO PÚBLICO -->
+      @if (!mostrarLogin) {
+        <button class="btn-login" (click)="toggleLogin()" id="btn-abrir-login">
+          🔑 Administrador
+        </button>
+      } @else {
+        <!-- FORMULARIO DE LOGIN -->
+        <form class="form-login" [formGroup]="loginForm" (ngSubmit)="alIniciarSesion()">
+          <div class="campo-login">
+            <input
+              type="text"
+              formControlName="nombre_usuario"
+              placeholder="Usuario"
+              id="input-usuario"
+              autocomplete="username"
+            />
+            @if (campoUsuario?.touched && campoUsuario?.errors?.['required']) {
+              <span class="error-campo">Usuario requerido</span>
+            }
+            @if (campoUsuario?.touched && campoUsuario?.errors?.['minlength']) {
+              <span class="error-campo">Mínimo 3 caracteres</span>
+            }
+          </div>
+
+          <div class="campo-login">
+            <input
+              type="password"
+              formControlName="password"
+              placeholder="Contraseña"
+              id="input-password"
+              autocomplete="current-password"
+            />
+            @if (campoPassword?.touched && campoPassword?.errors?.['required']) {
+              <span class="error-campo">Contraseña requerida</span>
+            }
+            @if (campoPassword?.touched && campoPassword?.errors?.['minlength']) {
+              <span class="error-campo">Mínimo 6 caracteres</span>
+            }
+          </div>
+
+          @if (errorLogin) {
+            <p class="error-login" role="alert">⚠️ {{ errorLogin }}</p>
+          }
+
+          <div class="acciones-login">
+            <button type="button" class="btn-cancelar" (click)="toggleLogin()" id="btn-cancelar-login">
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn-ingresar"
+              [disabled]="cargando"
+              id="btn-ingresar"
+            >
+              @if (cargando) {
+                <span class="spinner-inline"></span> Ingresando...
+              } @else {
+                Ingresar
+              }
+            </button>
+          </div>
+        </form>
+      }
+    }
+  </div>
+</header>
+
+
+<!-- ============================================== -->
+<!-- MODAL: CREAR NUEVO ADMINISTRADOR               -->
+<!-- ============================================== -->
+@if (mostrarCrearAdmin) {
+  <div class="fondo-modal-global" (click)="cerrarCrearAdmin()"></div>
+  <dialog open class="modal-admin">
+    <h2>👤 Crear Nuevo Administrador</h2>
+    
+    <form [formGroup]="crearAdminForm" (ngSubmit)="alCrearAdmin()">
+      <div class="campo-admin">
+        <label>Nombre de Usuario</label>
+        <input type="text" formControlName="nombre_usuario" autocomplete="off" />
+        @if (campoNuevoAdminUser?.touched && campoNuevoAdminUser?.errors?.['required']) {
+          <span class="error-campo">Requerido</span>
+        }
+        @if (campoNuevoAdminUser?.touched && campoNuevoAdminUser?.errors?.['minlength']) {
+          <span class="error-campo">Mínimo 3 letras</span>
+        }
+      </div>
+
+      <div class="campo-admin">
+        <label>Contraseña</label>
+        <input type="password" formControlName="password" autocomplete="new-password" />
+        @if (campoNuevoAdminPass?.touched && campoNuevoAdminPass?.errors?.['required']) {
+          <span class="error-campo">Requerida</span>
+        }
+        @if (campoNuevoAdminPass?.touched && campoNuevoAdminPass?.errors?.['minlength']) {
+          <span class="error-campo">Mínimo 6 letras</span>
+        }
+      </div>
+
+      @if (errorCrearAdmin) {
+        <p class="error-backend">⚠️ {{ errorCrearAdmin }}</p>
+      }
+      @if (exitoCrearAdmin) {
+        <p class="exito-backend">✅ {{ exitoCrearAdmin }}</p>
+      }
+
+      <div class="acciones-modal">
+        <button type="button" class="btn-cancelar-modal" (click)="cerrarCrearAdmin()">Cerrar</button>
+        <button type="submit" class="btn-guardar-modal" [disabled]="cargandoCrear">
+          @if(cargandoCrear) { Creando... } @else { Registrar }
+        </button>
+      </div>
+    </form>
+  </dialog>
+}
+
+
+<!-- ============================================== -->
+<!-- MODAL: EDITAR PERFIL ADMINISTRADOR             -->
+<!-- ============================================== -->
+@if (mostrarEditarPerfil) {
+  <div class="fondo-modal-global" (click)="cerrarEditarPerfil()"></div>
+  <dialog open class="modal-admin">
+    <h2>⚙️ Editar mi Perfil</h2>
+    <p class="subtexto">Sólo llena los campos que deseas cambiar.</p>
+    
+    <form [formGroup]="editarPerfilForm" (ngSubmit)="alEditarPerfil()">
+      <div class="campo-admin">
+        <label>Nuevo Usuario (Opcional)</label>
+        <input type="text" formControlName="nombre_usuario" autocomplete="off" placeholder="Dejar en blanco para no cambiar" />
+        @if (campoEdicionUser?.touched && campoEdicionUser?.errors?.['minlength']) {
+          <span class="error-campo">Mínimo 3 letras</span>
+        }
+      </div>
+
+      <div class="campo-admin">
+        <label>Nueva Contraseña (Opcional)</label>
+        <input type="password" formControlName="password" autocomplete="new-password" placeholder="Dejar en blanco para no cambiar" />
+        @if (campoEdicionPass?.touched && campoEdicionPass?.errors?.['minlength']) {
+          <span class="error-campo">Mínimo 6 letras</span>
+        }
+      </div>
+
+      @if (errorEditarPerfil) {
+        <p class="error-backend">⚠️ {{ errorEditarPerfil }}</p>
+      }
+      @if (exitoEditarPerfil) {
+        <p class="exito-backend">✅ {{ exitoEditarPerfil }}</p>
+      }
+
+      <div class="acciones-modal">
+        <button type="button" class="btn-cancelar-modal" (click)="cerrarEditarPerfil()">Cerrar</button>
+        <button type="submit" class="btn-guardar-modal" [disabled]="cargandoEditar">
+          @if(cargandoEditar) { Guardando... } @else { Actualizar Perfil }
+        </button>
+      </div>
+    </form>
+  </dialog>
+}
+
+
+<!-- ============================================== -->
+<!-- MODAL: GESTIONAR ADMINS (Eliminar)               -->
+<!-- ============================================== -->
+@if (mostrarGestionarAdmins) {
+  <div class="fondo-modal-global" (click)="cerrarGestionarAdmins()"></div>
+  <dialog open class="modal-admin modal-gestion">
+    <h2>🗑️ Gestionar Administradores</h2>
+    <p class="subtexto">Elimina administradores que ya no estén en la empresa.</p>
+
+    @if (cargandoGestion) {
+      <p class="cargando-texto">Cargando lista...</p>
+    } @else {
+      <ul class="lista-admins-gestion">
+        @for (admin of listaAdmins; track admin.id) {
+          <li>
+            <div class="info-admin-fila">
+              <strong>{{ admin.nombre_usuario }}</strong>
+            </div>
+            <!-- Evitar borrar a uno mismo activamente si es el logueado visualmente -->
+            @if (admin.nombre_usuario !== (nombreAdmin$ | async)) {
+              <button class="btn-eliminar-admin" (click)="alEliminarAdmin(admin.id)">
+                Eliminar
+              </button>
+            } @else {
+              <span class="badge-tu">Tú</span>
+            }
+          </li>
+        }
+      </ul>
+      @if (listaAdmins.length === 0) {
+        <p class="subtexto">No se encontraron administradores.</p>
+      }
+    }
+
+    @if (errorGestion) {
+      <p class="error-backend">⚠️ {{ errorGestion }}</p>
+    }
+    @if (exitoGestion) {
+      <p class="exito-backend">✅ {{ exitoGestion }}</p>
+    }
+
+    <div class="acciones-modal">
+      <button class="btn-cancelar-modal" (click)="cerrarGestionarAdmins()">Cerrar</button>
+    </div>
+  </dialog>
+}

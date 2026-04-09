@@ -1,0 +1,37 @@
+
+button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #433352; /* Morado oscuro base */
+  color: #c3b3d1;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  min-width: 10rem;
+  text-align: left;
+}
+
+button:hover,
+button:active,
+.active {
+  background-color: #6951dd; /* Morado brillante al seleccionar */
+  color: #f1e7ff;
+}
+
+img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+span {
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: normal;
+}

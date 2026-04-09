@@ -1,0 +1,58 @@
+@if (estaAgregandoTareaNueva) {
+  <app-nueva-tarea
+    [idUsuario]="idUsuario"
+    (cerrar)="alCerrarTareaNueva()" />
+}
+
+<section id="tareas">
+  <header>
+    <h2>Tareas de {{ nombre }}</h2>
+    <menu>
+      <!-- Botón "Agregar" visible SOLO cuando hay sesión activa -->
+      @if (isLoggedIn$ | async) {
+        <button id="btn-agregar-tarea" (click)="alIniciarNuevaTarea()">
+          + Agregar Tarea
+        </button>
+      }
+    </menu>
+  </header>
+
+  <!-- SKELETON: mientras aún no llegó la primera respuesta -->
+  @if (cargando) {
+    <ul class="lista-skeleton">
+      @for (sk of [1, 2, 3]; track sk) {
+        <li class="skeleton-card">
+          <div class="sk-titulo"></div>
+          <div class="sk-fecha"></div>
+          <div class="sk-texto"></div>
+          <div class="sk-texto sk-texto--corto"></div>
+        </li>
+      }
+    </ul>
+
+  } @else {
+
+    <!-- LISTA REAL DE TAREAS -->
+    @let listaTareas = (tareas$ | async) ?? [];
+
+    @if (listaTareas.length === 0) {
+      <p class="sin-tareas">
+        📋 No hay tareas asignadas a este usuario.
+        @if (isLoggedIn$ | async) {
+          Usa el botón <strong>+ Agregar Tarea</strong> para crear una.
+        }
+      </p>
+    } @else {
+      <ul>
+        @for (tarea of listaTareas; track tarea.id) {
+          <li>
+            <app-tarea
+              [tarea]="tarea"
+              [isAdmin]="(isLoggedIn$ | async) ?? false"
+            />
+          </li>
+        }
+      </ul>
+    }
+  }
+</section>

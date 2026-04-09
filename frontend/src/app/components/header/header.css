@@ -1,0 +1,507 @@
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 90%;
+  max-width: 50rem;
+  margin: 0 auto 2rem auto;
+  text-align: center;
+  background: linear-gradient(to bottom, #2c0b4c, #450d80);
+  padding: 1rem;
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+img {
+  width: 3.5rem;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+img:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 8px rgba(200, 150, 255, 0.7));
+}
+
+.titulo-bloque {
+  flex: 1;
+}
+
+h1 {
+  font-size: 1.25rem;
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+
+p {
+  margin: 0;
+  font-size: 0.8rem;
+  text-wrap: balance;
+  color: #c3b3d8;
+}
+
+/* ── ZONA DE SESIÓN ── */
+.zona-sesion {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+/* ── BOTÓN ADMIN (modo público) ── */
+.btn-login {
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0c8ff;
+  border: 1px solid rgba(200, 150, 255, 0.4);
+  border-radius: 20px;
+  padding: 0.4rem 1.2rem;
+  backdrop-filter: blur(4px);
+  transition: all 0.25s ease;
+}
+
+.btn-login:hover {
+  background: rgba(200, 150, 255, 0.2);
+  border-color: rgba(200, 150, 255, 0.8);
+  box-shadow: 0 0 12px rgba(200, 150, 255, 0.3);
+}
+
+/* ── MODO ADMINISTRADOR ── */
+.admin-activo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── MENÚ DESPLEGABLE ADMIN ── */
+.menu-admin-container {
+  position: relative;
+}
+
+.badge-admin {
+  background: rgba(100, 50, 180, 0.5);
+  color: #e0c8ff;
+  border: 1px solid rgba(200, 150, 255, 0.4);
+  border-radius: 20px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.badge-admin:hover {
+  background: rgba(120, 60, 200, 0.7);
+}
+
+.dropdown-admin {
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2c1b4a;
+  border: 1px solid rgba(200, 150, 255, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  overflow: hidden;
+  z-index: 50;
+  animation: fadeInDown 0.15s ease;
+}
+
+.dropdown-admin button {
+  background: transparent;
+  border: none;
+  color: #e0c8ff;
+  padding: 0.6rem 1rem;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  width: 100%;
+  border-bottom: 1px solid rgba(200, 150, 255, 0.1);
+  transition: background 0.2s ease;
+}
+
+.dropdown-admin button:last-child {
+  border-bottom: none;
+}
+
+.dropdown-admin button:hover {
+  background: rgba(200, 150, 255, 0.15);
+}
+
+.btn-logout {
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: rgba(220, 50, 80, 0.2);
+  color: #ffb3c1;
+  border: 1px solid rgba(220, 50, 80, 0.4);
+  border-radius: 20px;
+  padding: 0.3rem 1rem;
+  transition: all 0.25s ease;
+}
+
+.btn-logout:hover {
+  background: rgba(220, 50, 80, 0.4);
+  box-shadow: 0 0 10px rgba(220, 50, 80, 0.3);
+}
+
+/* ── FORMULARIO DE LOGIN ── */
+.form-login {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+  max-width: 22rem;
+  animation: fadeInDown 0.25s ease;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.campo-login {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.campo-login input {
+  font: inherit;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e0c8ff;
+  border: 1px solid rgba(200, 150, 255, 0.35);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.campo-login input:focus {
+  border-color: rgba(200, 150, 255, 0.8);
+  box-shadow: 0 0 8px rgba(200, 150, 255, 0.25);
+}
+
+.campo-login input::placeholder {
+  color: rgba(200, 150, 255, 0.5);
+}
+
+.error-campo {
+  font-size: 0.72rem;
+  color: #ffb3c1;
+  padding-left: 0.25rem;
+}
+
+.error-login {
+  margin: 0.25rem 0;
+  font-size: 0.8rem;
+  color: #ff8fa3;
+  background: rgba(220, 50, 80, 0.15);
+  border: 1px solid rgba(220, 50, 80, 0.3);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  text-align: center;
+}
+
+.acciones-login {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+}
+
+.btn-cancelar {
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: transparent;
+  color: #c3b3d8;
+  border: 1px solid rgba(200, 150, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn-cancelar:hover {
+  background: rgba(200, 150, 255, 0.1);
+}
+
+.btn-ingresar {
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  background: linear-gradient(135deg, #6a0dad, #380774);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 1.1rem;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-ingresar:hover:not(:disabled) {
+  background: linear-gradient(135deg, #7b1fd1, #4a0794);
+  box-shadow: 0 0 12px rgba(106, 13, 173, 0.5);
+}
+
+.btn-ingresar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── SPINNER INLINE ── */
+.spinner-inline {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── MODALES ADMIN (Crear / Perfil) ── */
+.fondo-modal-global {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-admin {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  width: 90%;
+  max-width: 24rem;
+  background: linear-gradient(135deg, #2c1b4a, #1a0f30);
+  color: #e0c8ff;
+  border: 1px solid rgba(200, 150, 255, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translate(-50%, -46%); }
+  to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+.modal-admin h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.modal-admin .subtexto {
+  font-size: 0.75rem;
+  color: #ab9ac0;
+  margin-bottom: 1rem;
+}
+
+.campo-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0 0 0.8rem 0;
+}
+
+.campo-admin label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #c3b3d8;
+  text-align: left;
+}
+
+.campo-admin input {
+  font: inherit;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e0c8ff;
+  border: 1px solid rgba(200, 150, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  outline: none;
+}
+
+.campo-admin input:focus {
+  border-color: #a55eea;
+  box-shadow: 0 0 8px rgba(165, 94, 234, 0.3);
+}
+
+.campo-admin input::placeholder {
+  color: rgba(200, 150, 255, 0.3);
+}
+
+.error-backend {
+  font-size: 0.82rem;
+  color: #ff8fa3;
+  background: rgba(220, 50, 80, 0.15);
+  border: 1px solid rgba(220, 50, 80, 0.3);
+  border-radius: 6px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.exito-backend {
+  font-size: 0.82rem;
+  color: #9bf3aa;
+  background: rgba(50, 220, 120, 0.15);
+  border: 1px solid rgba(50, 220, 120, 0.3);
+  border-radius: 6px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.acciones-modal {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.btn-cancelar-modal {
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: transparent;
+  color: #c3b3d8;
+  border: 1px solid rgba(200, 150, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.45rem 1rem;
+}
+
+.btn-guardar-modal {
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  background: linear-gradient(135deg, #6a0dad, #380774);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 1.2rem;
+}
+
+.btn-guardar-modal:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* ── PANTALLAS GRANDES ── */
+@media (min-width: 768px) {
+  header {
+    flex-direction: row;
+    text-align: left;
+    padding: 1.5rem 2rem;
+    gap: 1.5rem;
+  }
+
+  img { width: 4.5rem; }
+
+  h1 { font-size: 1.5rem; }
+
+  .zona-sesion {
+    margin-top: 0;
+    align-items: flex-end;
+    margin-left: auto;
+  }
+
+  .form-login {
+    align-items: flex-end;
+  }
+}
+
+/* ── GESTIONAR ADMINS LISTA ── */
+.lista-admins-gestion {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid rgba(200, 150, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.lista-admins-gestion li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid rgba(200, 150, 255, 0.1);
+}
+
+.lista-admins-gestion li:last-child {
+  border-bottom: none;
+}
+
+.info-admin-fila strong {
+  color: #e0c8ff;
+  font-size: 0.9rem;
+}
+
+.btn-eliminar-admin {
+  background: rgba(220, 50, 80, 0.2);
+  color: #ffb3c1;
+  border: 1px solid rgba(220, 50, 80, 0.4);
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-eliminar-admin:hover {
+  background: rgba(220, 50, 80, 0.4);
+}
+
+.badge-tu {
+  background: rgba(50, 220, 120, 0.2);
+  color: #9bf3aa;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid rgba(50, 220, 120, 0.3);
+}
+
+.cargando-texto {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #ab9ac0;
+  margin: 1rem 0;
+}

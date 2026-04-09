@@ -1,0 +1,19 @@
+* {
+  box-sizing: border-box; /* Asegura que los márgenes no ensanchen los elementos */
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Poppins", sans-serif; /* La fuente que instalaste en el index.html */
+  
+  /* El degradado exacto del profesor: de un morado oscuro a un negro profundo */
+  background: radial-gradient(circle at top left, #181023, #0b0519);
+  
+  color: #c3b3d8; /* Color de texto suave para que no canse la vista */
+}
