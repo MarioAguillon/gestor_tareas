@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Tarea, NuevaTareaInfo } from '../components/tarea/tarea.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TareasService {
-  private readonly url = 'http://localhost:3000/tareas';
+  private readonly url = `${environment.apiUrl}/tareas`;
 
   // Estado reactivo central de tareas
   private _tareas$ = new BehaviorSubject<Tarea[]>([]);

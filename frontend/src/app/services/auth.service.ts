@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface LoginResponse {
   mensaje: string;
@@ -12,7 +13,7 @@ export interface LoginResponse {
 export class AuthService {
   private readonly TOKEN_KEY = 'tarea_facil_token';
   private readonly USER_KEY = 'tarea_facil_usuario';
-  private readonly apiUrl = 'http://localhost:3000/auth';
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
 
   // Estado reactivo de sesión — se hidrata desde localStorage
   private _isLoggedIn$ = new BehaviorSubject<boolean>(this.hayTokenValido());

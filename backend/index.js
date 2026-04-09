@@ -330,8 +330,9 @@ app.delete('/tareas/:id', verifyToken, (req, res) => {
 // ─────────────────────────────────────────────
 // 8. ARRANQUE DEL SERVIDOR
 // ─────────────────────────────────────────────
-app.listen(3000, () => {
-  console.log('🚀 Servidor Tarea Fácil en http://localhost:3000');
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`🚀 Servidor Tarea Fácil en http://localhost:${port}`);
   console.log('📋 Endpoints públicos:  GET /tareas, POST /auth/login');
   console.log('🔒 Endpoints privados:  POST /tareas, PUT /tareas/:id, DELETE /tareas/:id');
   console.log('🔒 Endpoints privados:  POST /auth/register, PUT /auth/perfil');
