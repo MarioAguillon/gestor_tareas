@@ -1,22 +1,21 @@
 // index.js — Tarea Fácil API Backend
-// Stack: Node.js + Express + MySQL2 + JWT (RS256) + bcryptjs
+// Stack: Node.js + Express + MySQL2 + JWT (HS256) + bcryptjs
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
 const { seedAdmin } = require('./seed');
 
 // ─────────────────────────────────────────────
-// 1. PAR DE CLAVES RSA (generadas en memoria al arrancar)
+// 1. SECRETO JWT (HS256) — cargado desde variable de entorno
 // ─────────────────────────────────────────────
-const { privateKey, publicKey } = crypto.generateKeyPairSync('rsa', {
-  modulusLength: 2048,
-  publicKeyEncoding: { type: 'spki', format: 'pem' },
-  privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
-});
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.error('❌ FATAL: La variable de entorno JWT_SECRET no está definida. El servidor no puede arrancar de forma segura.');
+  process.exit(1);
+}
 
 // ─────────────────────────────────────────────
 // 2. CONFIGURACIÓN EXPRESS + CORS SEGURO
@@ -106,7 +105,7 @@ function verifyToken(req, res, next) {
 
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, publicKey, { algorithms: ['RS256'] });
+    const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
     req.admin = decoded;
     next();
   } catch (e) {
@@ -146,8 +145,8 @@ app.post('/auth/login', (req, res) => {
 
       const token = jwt.sign(
         { id: admin.id, nombre_usuario: admin.nombre_usuario },
-        privateKey,
-        { algorithm: 'RS256', expiresIn: '8h' }
+        JWT_SECRET,
+        { algorithm: 'HS256', expiresIn: '8h' }
       );
 
       res.json({
@@ -190,26 +189,8 @@ app.post('/auth/register', verifyToken, async (req, res) => {
   }
 });
 
-// Endpoint de emergencia para recuperar acceso (BORRAR ANTES DE PRODUCCIÓN DEFINITIVA)
-app.get('/auth/emergencia', async (req, res) => {
-  try {
-    const hash = await bcrypt.hash('admin123', 10);
-    // Asegurar que exista
-    db.query('SELECT * FROM administradores WHERE nombre_usuario = "admin"', (err, results) => {
-      if (results.length === 0) {
-        db.query('INSERT INTO administradores (nombre_usuario, password_hash) VALUES ("admin", ?)', [hash], () => {
-           res.send('<h1>Usuario "admin" (re)creado con contraseña "admin123". Ya puedes iniciar sesión.</h1>');
-        });
-      } else {
-        db.query('UPDATE administradores SET password_hash = ? WHERE nombre_usuario = "admin"', [hash], () => {
-           res.send('<h1>Contraseña de "admin" reiniciada a "admin123". Ya puedes iniciar sesión.</h1>');
-        });
-      }
-    });
-  } catch(e) {
-    res.send('Error');
-  }
-});
+// ⛔ Endpoint de emergencia ELIMINADO por razones de seguridad.
+// Si necesitas recuperar acceso, ejecuta seed.js manualmente en Railway.
 
 // PUT /auth/perfil — Protegido (editar propio perfil)
 app.put('/auth/perfil', verifyToken, async (req, res) => {
@@ -357,12 +338,9 @@ app.delete('/tareas/:id', verifyToken, (req, res) => {
 // ─────────────────────────────────────────────
 const port = process.env.PORT || 3000;
 
-// Exportar para Vercel Serverless
-module.exports = app;
+// El servidor siempre escucha — requerido por Railway en producción
+app.listen(port, '0.0.0.0', () => {
+  console.log(`🚀 Servidor Tarea Fácil en http://0.0.0.0:${port}`);
+});
 
-// Solo iniciamos el servidor si no estamos en entorno serverless de Vercel
-if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
-  app.listen(port, '0.0.0.0', () => {
-    console.log(`🚀 Servidor Tarea Fácil local en http://0.0.0.0:${port}`);
-  });
-}
+module.exports = app;
