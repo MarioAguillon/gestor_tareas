@@ -1,10 +1,5 @@
-const express = require('express');
-const app = express();
-
-// Importar la app de backend original que tiene todas las rutas configuradas
-const backendApp = require('../../backend/index.js');
-
-// Vercel redirige todo a /api/..., así que montamos nuestra app original bajo ese prefijo
-app.use('/api', backendApp);
-
-module.exports = app;
+// Este archivo ya no se usa — el backend está en Railway.
+// Se mantiene como stub para evitar errores en el build de Vercel.
+module.exports = (req, res) => {
+  res.status(410).json({ error: 'Este endpoint ya no existe. El backend está en Railway.' });
+};
