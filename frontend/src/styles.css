@@ -1,5 +1,15 @@
+/* ═══════════════════════════════════════════════
+   TAREA FÁCIL — Global Styles
+   Estética: Arquitectónico Futurista
+   Paleta: Azul profundo · Blanco puro · Rojo vibrante · Cian neón
+   ═══════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 * {
-  box-sizing: border-box; /* Asegura que los márgenes no ensanchen los elementos */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
@@ -10,10 +20,43 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: "Poppins", sans-serif; /* La fuente que instalaste en el index.html */
-  
-  /* El degradado exacto del profesor: de un morado oscuro a un negro profundo */
-  background: radial-gradient(circle at top left, #181023, #0b0519);
-  
-  color: #c3b3d8; /* Color de texto suave para que no canse la vista */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+
+  /* Fondo: Azul profundo cinematográfico con gradiente radial sutil */
+  background: #050a18;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 10% 0%, rgba(0, 60, 180, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 100%, rgba(255, 42, 75, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, #050a18 0%, #0a1128 100%);
+
+  color: #c4d5f4; /* Texto base: blanco azulado suave */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar personalizada ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(10, 17, 40, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(42, 117, 255, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(42, 117, 255, 0.5);
+}
+
+/* ── Selection highlight ── */
+::selection {
+  background: rgba(0, 240, 255, 0.2);
+  color: #ffffff;
 }

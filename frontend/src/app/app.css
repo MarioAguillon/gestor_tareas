@@ -1,6 +1,10 @@
+/* ═══════════════════════════════════════════════
+   APP LAYOUT — Panel de Control HUD
+   ═══════════════════════════════════════════════ */
+
 main {
-  width: 90%;
-  max-width: 50rem;
+  width: 92%;
+  max-width: 54rem;
   margin: 2.5rem auto;
   display: grid;
   grid-auto-flow: row;
@@ -14,20 +18,29 @@ main {
   display: flex;
   gap: 0.5rem;
   overflow: auto;
+  padding-bottom: 0.25rem;
 }
 
-/* Este es el texto que aparece si no hay nada seleccionado */
+/* Texto placeholder cuando no hay selección */
 #textoCondicional {
-  font-weight: bold;
+  font-weight: 500;
   font-size: 1.15rem;
   margin: 0;
   text-align: center;
+  color: rgba(196, 213, 244, 0.45);
+  letter-spacing: 0.03em;
+  padding: 3rem 1rem;
+  border: 1px dashed rgba(42, 117, 255, 0.15);
+  border-radius: 12px;
+  background: rgba(10, 17, 40, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* Regla para pantallas grandes (Tablets y Computadoras) */
 @media (min-width: 768px) {
   main {
-    margin: 4rem auto;
+    margin: 3rem auto;
     /* Divide la pantalla: 1 parte para Sidebar, 3 partes para Contenido */
     grid-template-columns: 1fr 3fr;
   }
@@ -37,14 +50,7 @@ main {
   }
 
   #textoCondicional {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     text-align: left;
   }
-}
-
-#textoCondicional {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #a1a1a1;
-  margin-top: 2rem;
 }
