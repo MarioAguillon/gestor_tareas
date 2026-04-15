@@ -601,3 +601,55 @@ p {
   color: rgba(196, 213, 244, 0.45);
   margin: 1rem 0;
 }
+
+.acciones-fila-admin {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.btn-editar-admin {
+  background: rgba(42, 117, 255, 0.1);
+  color: rgba(140, 190, 255, 0.9);
+  border: 1px solid rgba(42, 117, 255, 0.3);
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-editar-admin:hover {
+  background: rgba(42, 117, 255, 0.2);
+  border-color: rgba(0, 240, 255, 0.5);
+  box-shadow: 0 0 10px rgba(42, 117, 255, 0.15);
+  color: #ffffff;
+}
+
+.edicion-admin-inline {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.edicion-admin-inline form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.edicion-admin-inline .campo-admin {
+  margin-bottom: 0.5rem;
+}
+
+.acciones-inline {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+}
+
+.acciones-inline button {
+  padding: 0.3rem 0.8rem;
+  font-size: 0.75rem;
+}

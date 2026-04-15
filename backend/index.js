@@ -262,6 +262,47 @@ app.delete('/auth/admins/:id', verifyToken, (req, res) => {
   });
 });
 
+// PUT /auth/admins/:id — Protegido (editar cualquier administrador)
+app.put('/auth/admins/:id', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const { nombre_usuario, password } = req.body;
+
+  if (!nombre_usuario && !password) {
+    return res.status(400).json({ error: 'Debes enviar al menos un campo para actualizar' });
+  }
+
+  const campos = [];
+  const valores = [];
+
+  if (nombre_usuario) {
+    campos.push('nombre_usuario = ?');
+    valores.push(nombre_usuario);
+  }
+
+  if (password) {
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
+    }
+    const hash = await bcrypt.hash(password, 10);
+    campos.push('password_hash = ?');
+    valores.push(hash);
+  }
+
+  valores.push(id);
+  const sql = `UPDATE administradores SET ${campos.join(', ')} WHERE id = ?`;
+
+  db.query(sql, valores, (err) => {
+    if (err) {
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(409).json({ error: 'El nombre de usuario ya está en uso' });
+      }
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+    res.json({ mensaje: 'Administrador actualizado exitosamente' });
+  });
+});
+
+
 // ─────────────────────────────────────────────
 // 7. ENDPOINTS DE TAREAS
 // ─────────────────────────────────────────────

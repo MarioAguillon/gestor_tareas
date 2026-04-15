@@ -47,6 +47,9 @@ export class Header implements OnInit {
   exitoGestion: string | null = null;
   cargandoGestion = false;
 
+  adminEditandoId: number | null = null;
+  editarOtroAdminForm!: FormGroup;
+
   ngOnInit() {
     this.loginForm = this.fb.group({
       nombre_usuario: ['', [Validators.required, Validators.minLength(3)]],
@@ -59,6 +62,11 @@ export class Header implements OnInit {
     });
 
     this.editarPerfilForm = this.fb.group({
+      nombre_usuario: ['', [Validators.minLength(3)]],
+      password: ['', [Validators.minLength(6)]]
+    });
+
+    this.editarOtroAdminForm = this.fb.group({
       nombre_usuario: ['', [Validators.minLength(3)]],
       password: ['', [Validators.minLength(6)]]
     });
@@ -201,11 +209,13 @@ export class Header implements OnInit {
     this.mostrarGestionarAdmins = true;
     this.errorGestion = null;
     this.exitoGestion = null;
+    this.adminEditandoId = null;
     this.cargarListaAdmins();
   }
 
   cerrarGestionarAdmins() {
     this.mostrarGestionarAdmins = false;
+    this.adminEditandoId = null;
   }
 
   cargarListaAdmins() {
@@ -242,6 +252,49 @@ export class Header implements OnInit {
     });
   }
 
+  iniciarEdicionOtroAdmin(admin: any) {
+    this.adminEditandoId = admin.id;
+    this.editarOtroAdminForm.patchValue({ nombre_usuario: admin.nombre_usuario, password: '' });
+    this.errorGestion = null;
+    this.exitoGestion = null;
+  }
+
+  cancelarEdicionOtroAdmin() {
+    this.adminEditandoId = null;
+    this.editarOtroAdminForm.reset();
+  }
+
+  guardarEdicionOtroAdmin() {
+    if (!this.adminEditandoId) return;
+
+    const { nombre_usuario, password } = this.editarOtroAdminForm.value;
+    if (!nombre_usuario && !password) {
+      this.errorGestion = 'Rellena un campo para actualizar.';
+      return;
+    }
+    if (this.editarOtroAdminForm.invalid) {
+      this.editarOtroAdminForm.markAllAsTouched();
+      return;
+    }
+
+    this.cargandoGestion = true;
+    this.errorGestion = null;
+    this.exitoGestion = null;
+
+    this.authService.editarAdmin(this.adminEditandoId, nombre_usuario, password).subscribe({
+      next: () => {
+        this.exitoGestion = 'Administrador modificado con éxito.';
+        this.adminEditandoId = null;
+        this.cargarListaAdmins();
+      },
+      error: (err) => {
+        this.errorGestion = err.error?.error ?? 'Error al modificar administrador.';
+        this.cargandoGestion = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
   // Getters validación
   get campoUsuario() { return this.loginForm.get('nombre_usuario'); }
   get campoPassword() { return this.loginForm.get('password'); }
@@ -251,4 +304,7 @@ export class Header implements OnInit {
   
   get campoEdicionUser() { return this.editarPerfilForm.get('nombre_usuario'); }
   get campoEdicionPass() { return this.editarPerfilForm.get('password'); }
+  
+  get campoOtroAdminUser() { return this.editarOtroAdminForm.get('nombre_usuario'); }
+  get campoOtroAdminPass() { return this.editarOtroAdminForm.get('password'); }
 }

@@ -214,16 +214,47 @@
       <ul class="lista-admins-gestion">
         @for (admin of listaAdmins; track admin.id) {
           <li>
-            <div class="info-admin-fila">
-              <strong>{{ admin.nombre_usuario }}</strong>
-            </div>
-            <!-- Evitar borrar a uno mismo activamente si es el logueado visualmente -->
-            @if (admin.nombre_usuario !== (nombreAdmin$ | async)) {
-              <button class="btn-eliminar-admin" (click)="alEliminarAdmin(admin.id)">
-                Eliminar
-              </button>
+            @if (adminEditandoId === admin.id) {
+              <!-- FORMULARIO DE EDICIÓN INLINE -->
+              <div class="edicion-admin-inline">
+                <form [formGroup]="editarOtroAdminForm" (ngSubmit)="guardarEdicionOtroAdmin()">
+                  <div class="campo-admin">
+                    <label>Nuevo Usuario</label>
+                    <input type="text" formControlName="nombre_usuario" placeholder="Dejar en blanco para no cambiar" />
+                    @if (campoOtroAdminUser?.touched && campoOtroAdminUser?.errors?.['minlength']) {
+                      <span class="error-campo">Mínimo 3 letras</span>
+                    }
+                  </div>
+                  <div class="campo-admin">
+                    <label>Nueva Contraseña</label>
+                    <input type="password" formControlName="password" autocomplete="new-password" placeholder="Dejar en blanco para no cambiar" />
+                    @if (campoOtroAdminPass?.touched && campoOtroAdminPass?.errors?.['minlength']) {
+                      <span class="error-campo">Mínimo 6 letras</span>
+                    }
+                  </div>
+                  <div class="acciones-inline">
+                    <button type="button" class="btn-cancelar-modal" (click)="cancelarEdicionOtroAdmin()">Cancelar</button>
+                    <button type="submit" class="btn-guardar-modal" [disabled]="cargandoGestion">Guardar</button>
+                  </div>
+                </form>
+              </div>
             } @else {
-              <span class="badge-tu">Tú</span>
+              <!-- VISTA ESTÁNDAR DE LA FILA -->
+              <div class="info-admin-fila">
+                <strong>{{ admin.nombre_usuario }}</strong>
+              </div>
+              <div class="acciones-fila-admin">
+                @if (admin.nombre_usuario !== (nombreAdmin$ | async)) {
+                  <button class="btn-editar-admin" (click)="iniciarEdicionOtroAdmin(admin)">
+                    Editar
+                  </button>
+                  <button class="btn-eliminar-admin" (click)="alEliminarAdmin(admin.id)">
+                    Eliminar
+                  </button>
+                } @else {
+                  <span class="badge-tu">Tú</span>
+                }
+              </div>
             }
           </li>
         }

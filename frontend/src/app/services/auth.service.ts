@@ -24,7 +24,7 @@ export class AuthService {
   );
   readonly nombreAdmin$ = this._nombreAdmin$.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /** Verifica que exista token en localStorage */
   private hayTokenValido(): boolean {
@@ -86,5 +86,14 @@ export class AuthService {
   /** DELETE /auth/admins/:id → Elimina un administrador */
   eliminarAdmin(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/admins/${id}`);
+  }
+
+  /** PUT /auth/admins/:id → Edita cualquier administrador (nombre o pass) */
+  editarAdmin(id: number, nombre_usuario?: string, password?: string): Observable<any> {
+    const body: any = {};
+    if (nombre_usuario) body.nombre_usuario = nombre_usuario;
+    if (password) body.password = password;
+
+    return this.http.put(`${this.apiUrl}/admins/${id}`, body);
   }
 }
