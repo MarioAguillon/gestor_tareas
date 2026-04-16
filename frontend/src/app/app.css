@@ -37,12 +37,17 @@ main {
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* Regla para pantallas grandes (Tablets y Computadoras) */
 @media (min-width: 768px) {
-  main {
+  main.layout-tareas {
     margin: 3rem auto;
     /* Divide la pantalla: 1 parte para Sidebar, 3 partes para Contenido */
     grid-template-columns: 1fr 3fr;
+  }
+
+  main.layout-usuarios {
+    margin: 3rem auto;
+    grid-template-columns: 1fr;
+    max-width: 1200px;
   }
 
   #usuarios {

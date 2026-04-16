@@ -33,6 +33,8 @@ app.use(cors({
 }));
 
 app.use(express.json());
+const path = require('path');
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Healthcheck — Railway necesita esto para confirmar que la app responde
 app.get('/', (req, res) => {
@@ -67,7 +69,14 @@ db.connect((err) => {
       password_hash VARCHAR(255) NOT NULL,
       creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`,
-    // Tabla tareas
+    // Tabla usuarios (ANTES de tareas, por la FK)
+    `CREATE TABLE IF NOT EXISTS usuarios (
+      id VARCHAR(50) PRIMARY KEY,
+      nombre VARCHAR(100) NOT NULL,
+      avatar VARCHAR(255) DEFAULT 'avatar1.jpg',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`,
+    // Tabla tareas (con FK a usuarios)
     `CREATE TABLE IF NOT EXISTS tareas (
       id VARCHAR(50) PRIMARY KEY,
       idUsuario VARCHAR(50) NOT NULL,
@@ -95,26 +104,19 @@ db.connect((err) => {
 });
 
 // ─────────────────────────────────────────────
-// 5. MIDDLEWARE DE AUTENTICACIÓN JWT (RS256)
+// 5. MIDDLEWARE DE AUTENTICACIÓN JWT (HS256)
 // ─────────────────────────────────────────────
-function verifyToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Token requerido' });
-  }
+const { verifyTokenWithSecret } = require('./middleware/authMiddleware');
+const verifyToken = verifyTokenWithSecret(JWT_SECRET);
 
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
-    req.admin = decoded;
-    next();
-  } catch (e) {
-    if (e.name === 'TokenExpiredError') {
-      return res.status(401).json({ error: 'Token expirado. Inicia sesión nuevamente.' });
-    }
-    return res.status(401).json({ error: 'Token inválido' });
-  }
-}
+// ─────────────────────────────────────────────
+// RUTAS EXTERNAS
+// ─────────────────────────────────────────────
+const usuariosRoutes = require('./routes/usuarios.routes')(verifyToken);
+const avataresRoutes = require('./routes/avatares.routes');
+
+app.use('/api/usuarios', usuariosRoutes);
+app.use('/api/avatares', avataresRoutes);
 
 // ─────────────────────────────────────────────
 // 6. ENDPOINTS DE AUTENTICACIÓN
@@ -322,11 +324,23 @@ app.post('/tareas', verifyToken, (req, res) => {
   if (!titulo || titulo.trim().length < 3) {
     return res.status(400).json({ error: 'El título debe tener al menos 3 caracteres' });
   }
+  
+  if (!idUsuario) {
+    return res.status(400).json({ error: 'Usuario no proporcionado' });
+  }
 
-  const sql = `INSERT INTO tareas (id, titulo, resumen, expira, idUsuario, completada) VALUES (?, ?, ?, ?, ?, 0)`;
-  db.query(sql, [id, titulo, resumen, expira, idUsuario], (err) => {
-    if (err) return res.status(500).json({ error: 'Error al crear la tarea' });
-    res.status(201).json({ mensaje: 'Tarea creada exitosamente' });
+  // RF-03 Verificar integridad referencial
+  db.query('SELECT id FROM usuarios WHERE id = ?', [idUsuario], (errUser, userResults) => {
+    if (errUser) return res.status(500).json({ error: 'Error del servidor al verificar usuario' });
+    if (userResults.length === 0) {
+      return res.status(400).json({ error: 'Usuario no válido' });
+    }
+
+    const sql = `INSERT INTO tareas (id, titulo, resumen, expira, idUsuario, completada) VALUES (?, ?, ?, ?, ?, 0)`;
+    db.query(sql, [id, titulo, resumen, expira, idUsuario], (err) => {
+      if (err) return res.status(500).json({ error: 'Error al crear la tarea' });
+      res.status(201).json({ mensaje: 'Tarea creada exitosamente' });
+    });
   });
 });
 

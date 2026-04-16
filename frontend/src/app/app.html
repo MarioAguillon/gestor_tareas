@@ -1,21 +1,30 @@
-<app-header (limpiarSeleccion)="alLimpiarSeleccion()"></app-header>
+<app-header 
+  (limpiarSeleccion)="alLimpiarSeleccion()"
+  (cambiarVista)="cambiarVista($event)">
+</app-header>
 
-<main>
-  <ul id="usuarios">
-    @for (u of usuarios; track u.id) {
-      <li>
-        <app-sidebar
-          [usuario]="u"
-          [seleccionado]="u.id === idUsuarioSeleccionado"
-          (seleccionar)="alSeleccionarUsuario($event)">
-        </app-sidebar>
-      </li>
+<main [class.layout-usuarios]="viewMode() === 'USUARIOS'" [class.layout-tareas]="viewMode() === 'TAREAS'">
+  @if (viewMode() === 'TAREAS') {
+    <ul id="usuarios">
+      @for (u of usuarios(); track u.id) {
+        <li>
+          <app-sidebar
+            [usuario]="u"
+            [seleccionado]="u.id === idUsuarioSeleccionado"
+            (seleccionar)="alSeleccionarUsuario($event)">
+          </app-sidebar>
+        </li>
+      }
+    </ul>
+
+    @if (usuarioSeleccionado) {
+      <app-main-content [idUsuario]="usuarioSeleccionado.id" [nombre]="usuarioSeleccionado.nombre" />
+    } @else {
+      <p id="textoCondicional">Selecciona un usuario de la lista</p>
     }
-  </ul>
+  }
 
-  @if (usuarioSeleccionado) {
-    <app-main-content [idUsuario]="usuarioSeleccionado.id" [nombre]="usuarioSeleccionado.nombre" />
-  } @else {
-    <p id="textoCondicional">Selecciona un usuario de la lista</p>
+  @if (viewMode() === 'USUARIOS') {
+    <app-gestionar-usuarios style="flex: 1; overflow-y: auto;"></app-gestionar-usuarios>
   }
 </main>

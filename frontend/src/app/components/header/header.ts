@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class Header implements OnInit {
   @Output() limpiarSeleccion = new EventEmitter<void>();
+  @Output() cambiarVista = new EventEmitter<'TAREAS' | 'USUARIOS'>();
 
   private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
@@ -74,6 +75,10 @@ export class Header implements OnInit {
 
   alClickLogo() {
     this.limpiarSeleccion.emit();
+  }
+
+  navegarVista(vista: 'TAREAS' | 'USUARIOS') {
+    this.cambiarVista.emit(vista);
   }
 
   // --- LOGIN ---

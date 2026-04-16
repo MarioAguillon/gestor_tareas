@@ -1,23 +1,30 @@
 <header>
   <!-- Logo clicable → limpia selección de usuario -->
-  <img
-    src="img/listado-tareas-logo.png"
-    alt="Lista de Tareas"
-    (click)="alClickLogo()"
-    title="Volver al inicio"
-    id="logo-app"
-  />
-  <div class="titulo-bloque">
-    <h1>TAREA FÁCIL</h1>
-    <p>Administrador de Tareas ADSO</p>
+  <div class="logo-app-container" (click)="alClickLogo()" style="display: flex; align-items: center; gap: 15px; cursor: pointer;">
+    <img
+      src="img/javriana_logo.png"
+      alt="Javeriana Logo"
+      title="Volver al inicio"
+      id="logo-app"
+      style="height: 40px; border-radius: 0;"
+    />
+    <div class="titulo-bloque">
+      <h1 style="color: #FFFFFF; font-size: 1.2rem; margin: 0;">FICHA 3293664</h1>
+      <p style="color: #90CAF9; margin: 0; font-size: 0.9rem;">Administrador de Evidencias</p>
+    </div>
   </div>
 
   <!-- ZONA DE SESIÓN -->
   <div class="zona-sesion">
     @if (isLoggedIn$ | async) {
       <!-- MODO ADMINISTRADOR -->
-      <div class="admin-activo">
+      <div class="admin-activo" style="display: flex; align-items: center; gap: 15px;">
         
+        <div class="nav-links">
+          <button class="nav-btn" (click)="navegarVista('TAREAS')">Tareas</button>
+          <button class="nav-btn" (click)="navegarVista('USUARIOS')">Usuarios</button>
+        </div>
+
         <div class="menu-admin-container">
           <button class="badge-admin" (click)="toggleOpcionesAdmin()">
             🔐 {{ nombreAdmin$ | async }} ▼

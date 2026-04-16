@@ -1,0 +1,46 @@
+<div class="gestionar-container">
+  <div class="header-seccion">
+    <h1>Gestionar Usuarios</h1>
+    <button class="btn-nuevo" (click)="abrirModalNuevo()">Agregar Usuario Nuevo</button>
+  </div>
+
+  <div class="usuarios-grid" *ngIf="!isLoading && usuarios().length > 0">
+    <div class="tarjeta-usuario" *ngFor="let usuario of usuarios()">
+      <div class="tarjeta-contenido">
+        <img 
+          [src]="getAvatarPath(usuario.avatar, usuario.nombre)" 
+          alt="Avatar de {{usuario.nombre}}" 
+          class="avatar-img"
+          onerror="this.src='https://ui-avatars.com/api/?name=Usuario&background=1565C0&color=fff&size=200'"
+        >
+        <h3>{{ usuario.nombre }}</h3>
+        <p class="subtitulo">Usuario Residente</p>
+      </div>
+      <div class="tarjeta-acciones">
+        <button class="btn-editar" (click)="abrirModalEditar(usuario)">✏ Editar</button>
+        <button class="btn-eliminar" (click)="eliminarUsuario(usuario)">🗑 Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="skeleton-grid" *ngIf="isLoading">
+    <div class="skeleton-tarjeta" *ngFor="let item of [1,2,3]"></div>
+  </div>
+
+  <div class="no-data" *ngIf="!isLoading && usuarios().length === 0">
+    <p>No hay usuarios registrados aún.</p>
+  </div>
+
+  <!-- Componente Modal UI -->
+  <app-modal-usuario 
+    [isVisible]="modalVisible"
+    [usuarioAEditar]="usuarioEditando"
+    (close)="cerrarModal()"
+    (save)="guardarUsuario($event)">
+  </app-modal-usuario>
+
+  <!-- Toast -->
+  <div class="toast" [class.mostrar]="mensajeToast !== null">
+    {{ mensajeToast }}
+  </div>
+</div>

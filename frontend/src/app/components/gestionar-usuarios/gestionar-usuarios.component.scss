@@ -1,0 +1,169 @@
+.gestionar-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .header-seccion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    h1 {
+      color: #FFFFFF;
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .btn-nuevo {
+      background-color: #4CAF50;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      padding: 16px 32px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+
+      &:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+      }
+    }
+  }
+
+  .usuarios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+  }
+
+  .tarjeta-usuario {
+    background-color: #1A2535;
+    border: 1px solid rgba(30, 136, 229, 0.3);
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 280px;
+
+    &:hover {
+      border-color: #1E88E5;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(21, 101, 192, 0.3);
+    }
+
+    .tarjeta-contenido {
+      .avatar-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
+        border: 3px solid #1E88E5;
+      }
+
+      h3 {
+        color: #FFFFFF;
+        margin: 0 0 10px 0;
+        font-size: 1.25rem;
+      }
+
+      .subtitulo {
+        color: #90CAF9;
+        margin: 0;
+        font-size: 0.9rem;
+      }
+    }
+
+    .tarjeta-acciones {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 25px;
+
+      button {
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: transparent;
+      }
+
+      .btn-editar {
+        color: #1E88E5;
+        border: 1px solid #1E88E5;
+
+        &:hover {
+          background: rgba(30, 136, 229, 0.1);
+        }
+      }
+
+      .btn-eliminar {
+        color: #E57373;
+        border: 1px solid rgba(229, 115, 115, 0.5);
+
+        &:hover {
+          border-color: #E57373;
+          background: rgba(229, 115, 115, 0.1);
+        }
+      }
+    }
+  }
+
+  .skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+
+    .skeleton-tarjeta {
+      background: #1A2535;
+      border-radius: 12px;
+      height: 280px;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+  }
+
+  .no-data {
+    text-align: center;
+    color: #90CAF9;
+    font-size: 1.2rem;
+    padding: 50px;
+    width: 100%;
+    grid-column: 1 / -1;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0D47A1;
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: bottom 0.3s ease;
+    z-index: 9999;
+
+    &.mostrar {
+      bottom: 30px;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}

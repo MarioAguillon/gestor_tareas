@@ -47,19 +47,20 @@ button:hover::before {
   background: rgba(0, 240, 255, 0.4);
 }
 
-/* ── Estado activo: Borde cian vibrante + resplandor ── */
+/* ── Estado activo: Borde azul Javeriana ── */
 .active {
-  background: rgba(42, 117, 255, 0.12);
-  border-color: rgba(0, 240, 255, 0.3);
+  background: #243044;
+  border-color: #1E88E5;
   color: #ffffff;
   box-shadow:
-    0 0 16px rgba(0, 240, 255, 0.08),
-    0 0 1px rgba(0, 240, 255, 0.3) inset;
+    0 0 16px rgba(30, 136, 229, 0.2),
+    0 0 1px rgba(30, 136, 229, 0.5) inset;
 }
 
 .active::before {
-  background: rgba(0, 240, 255, 0.7);
-  box-shadow: 0 0 6px rgba(0, 240, 255, 0.4);
+  background: #1E88E5;
+  width: 3px;
+  box-shadow: 0 0 6px rgba(30, 136, 229, 0.4);
   top: 15%;
   bottom: 15%;
 }
@@ -76,8 +77,8 @@ img {
 }
 
 .active img {
-  border-color: rgba(0, 240, 255, 0.4);
-  box-shadow: 0 0 8px rgba(0, 240, 255, 0.15);
+  border-color: #1E88E5;
+  box-shadow: 0 0 8px rgba(30, 136, 229, 0.3);
 }
 
 span {

@@ -4,11 +4,17 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Development server
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
+   2. Crea una copia del archivo `.env.example` y renómbralo a `.env`.
+   3. Completa tus credenciales de MySQL y firma JWT (`JWT_SECRET`) en `.env`.
+   4. **Inicializa la Base de Datos:** Si estás configurando en un entorno local de prueba, ejecuta el script de setup:
+      ```bash
+      node setup-db.js
+      ```
+   5. En servidores de producción como Railway donde la tabla ya está en `tareas_db`, solo bastarán las variables correctas.
+   6. Inicia el servidor de desarrollo:
+      ```bash
+      npm run dev
+      ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 

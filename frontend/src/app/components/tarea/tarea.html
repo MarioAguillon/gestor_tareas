@@ -6,15 +6,19 @@
 
     <!-- Botones de acción — visibles solo para el administrador -->
     <p class="acciones">
-      @if (isAdmin && tarea.completada === 0) {
-        <button class="btn-terminar" (click)="alCompletarTarea()" id="btn-terminar-{{ tarea.id }}">
-          Terminar
-        </button>
-      }
       @if (isAdmin) {
-        <button class="btn-editar" (click)="alAbrirEdicion()" id="btn-editar-{{ tarea.id }}">
-          ✏️ Editar
-        </button>
+        @if (tarea.completada === 0) {
+          <button class="btn-terminar" (click)="alCompletarTarea()" id="btn-terminar-{{ tarea.id }}">
+            Terminar
+          </button>
+          <button class="btn-editar" (click)="alAbrirEdicion()" id="btn-editar-{{ tarea.id }}">
+            ✏️ Editar
+          </button>
+        } @else {
+          <button class="btn-terminar" (click)="alReabrirTarea()" id="btn-reabrir-{{ tarea.id }}">
+            🔙 Reabrir
+          </button>
+        }
         <button class="btn-borrar" (click)="alBorrarTarea()" id="btn-borrar-{{ tarea.id }}">
           Borrar
         </button>

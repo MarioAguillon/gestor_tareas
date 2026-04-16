@@ -56,6 +56,17 @@ export class TareaComponent implements OnInit {
     });
   }
 
+  // ── Botón "Reabrir" ──
+  alReabrirTarea() {
+    this.tareasService.editarTarea(this.tarea.id, { completada: 0 }).subscribe({
+      next: () => {
+        const tareaActualizada = { ...this.tarea, completada: 0 };
+        this.tareasService.actualizarTareaLocal(tareaActualizada);
+      },
+      error: (err) => console.error('Error al reabrir tarea:', err),
+    });
+  }
+
   // ── Botón "Borrar" ──
   alBorrarTarea() {
     this.tareasService.eliminarTarea(this.tarea.id).subscribe({

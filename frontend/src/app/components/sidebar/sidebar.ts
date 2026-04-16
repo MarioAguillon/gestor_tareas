@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Tarjeta } from '../tarjeta/tarjeta'; // <--- IMPORTA AQUÍ
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,8 +15,7 @@ export class Sidebar {
   @Output() seleccionar = new EventEmitter<string>();
 
  get rutaImagen() {
-  // Entramos a 'img', luego a 'avatar' y buscamos la foto
-  return 'img/avatar/' + this.usuario.avatar;
+  return `${environment.apiUrl}/public/avatars/${this.usuario.avatar}`;
 }
 
   alSeleccionarUsuario() {

@@ -1,0 +1,135 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-caja {
+  background: #1A2535;
+  border: 1px solid #1E88E5;
+  border-radius: 16px;
+  padding: 30px;
+  width: 90%;
+  max-width: 500px;
+  animation: modalEnter 300ms ease-out forwards;
+
+  .modal-titulo {
+    color: #FFFFFF;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      color: #90CAF9;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .input-oscuro {
+      width: 100%;
+      background: #0F1923;
+      border: 1px solid #1E88E5;
+      color: #FFFFFF;
+      padding: 12px 15px;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      box-sizing: border-box;
+
+      &::placeholder {
+        color: #90CAF9;
+        opacity: 0.7;
+      }
+
+      &:focus {
+        border-color: #1565C0;
+        box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.3);
+      }
+    }
+  }
+
+  .avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+
+    img {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+      object-fit: cover;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      &.seleccionado {
+        border-color: #1E88E5;
+        box-shadow: 0 0 15px rgba(30, 136, 229, 0.5);
+        position: relative;
+      }
+    }
+  }
+
+  .modal-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+
+    button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-cancelar {
+      background: transparent;
+      color: #FFFFFF;
+      border: 1px solid #90CAF9;
+
+      &:hover {
+        background: rgba(144, 202, 249, 0.1);
+      }
+    }
+
+    .btn-guardar {
+      background: #1565C0;
+      color: #FFFFFF;
+
+      &:hover {
+        background: #0D47A1;
+      }
+    }
+  }
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
