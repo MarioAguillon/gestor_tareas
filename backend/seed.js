@@ -39,4 +39,36 @@ async function seedAdmin(db) {
   });
 }
 
-module.exports = { seedAdmin };
+// ─────────────────────────────────────────────
+// Seed de Usuarios predeterminados del proyecto Javeriana
+// ─────────────────────────────────────────────
+async function seedUsuarios(db) {
+  return new Promise((resolve, reject) => {
+    const usuariosPredeterminados = [
+      ['u1', 'Andrés Guardia',   'avatar1.jpg'],
+      ['u2', 'David Gil',        'avatar2.jpg'],
+      ['u3', 'Diego Sanchez',    'avatar3.jpg'],
+      ['u4', 'Mario Aguillón',   'avatar4.jpg'],
+      ['u5', 'Mischael Pulido',  'avatar5.jpg'],
+      ['u6', 'Laura Martínez',   'avatar6.jpg'],
+      ['u7', 'Carlos Pérez',     'avatar7.jpg'],
+      ['u8', 'Valentina Ríos',   'avatar8.jpg'],
+    ];
+
+    const sql = `INSERT IGNORE INTO usuarios (id, nombre, avatar) VALUES ?`;
+    db.query(sql, [usuariosPredeterminados], (err, result) => {
+      if (err) {
+        console.error('❌ Error al insertar usuarios predeterminados:', err.message);
+        return reject(err);
+      }
+      if (result.affectedRows > 0) {
+        console.log(`✅ ${result.affectedRows} usuarios predeterminados creados.`);
+      } else {
+        console.log('ℹ️  Usuarios predeterminados ya existen. Seeding omitido.');
+      }
+      resolve();
+    });
+  });
+}
+
+module.exports = { seedAdmin, seedUsuarios };

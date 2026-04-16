@@ -6,7 +6,7 @@ const cors = require('cors');
 const mysql = require('mysql2');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { seedAdmin } = require('./seed');
+const { seedAdmin, seedUsuarios } = require('./seed');
 
 // ─────────────────────────────────────────────
 // 1. SECRETO JWT (HS256) — cargado desde variable de entorno
@@ -96,8 +96,10 @@ db.connect((err) => {
       }
       tablasPendientes--;
       if (tablasPendientes === 0) {
-        // 5. SEED — solo DESPUÉS de que ambas tablas existen
-        seedAdmin(db).catch((e) => console.error('❌ Seed falló:', e.message));
+        // 5. SEED — solo DESPUÉS de que todas las tablas existen
+        seedAdmin(db)
+          .then(() => seedUsuarios(db))
+          .catch((e) => console.error('❌ Seed falló:', e.message));
       }
     });
   });
