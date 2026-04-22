@@ -1,26 +1,28 @@
 // index.js — Tarea Fácil API Backend
 // Stack: Node.js + Express + MySQL2 + JWT (HS256) + bcryptjs
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { seedAdmin, seedUsuarios } = require('./seed');
 
 // ─────────────────────────────────────────────
-// 1. SECRETO JWT (HS256) — cargado desde variable de entorno
+// 1. CONFIGURACIÓN, ENTORNO Y BASE DE DATOS
 // ─────────────────────────────────────────────
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  console.error('❌ FATAL: La variable de entorno JWT_SECRET no está definida. El servidor no puede arrancar de forma segura.');
-  process.exit(1);
-}
+const env = require('./config/env');
+const { db, connectDB } = require('./config/database');
+
+// Inicializar la base de datos
+connectDB();
+
+const JWT_SECRET = env.jwtSecret;
 
 // ─────────────────────────────────────────────
 // 2. CONFIGURACIÓN EXPRESS + CORS SEGURO
 // ─────────────────────────────────────────────
 const app = express();
+
+// Render utiliza proxys inversos. Requerido para leer la IP real del cliente.
+app.set('trust proxy', 1);
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -42,68 +44,8 @@ app.get('/', (req, res) => {
 });
 
 // ─────────────────────────────────────────────
-// 3. CONEXIÓN A MYSQL
+// 3. RUTAS Y LÓGICA DE NEGOCIO
 // ─────────────────────────────────────────────
-const db = mysql.createConnection({
-  host:     process.env.MYSQLHOST     || process.env.MYSQL_HOST     || 'localhost',
-  user:     process.env.MYSQLUSER     || process.env.MYSQL_USER     || 'root',
-  password: process.env.MYSQLPASSWORD || process.env.MYSQL_PASSWORD || '',
-  database: process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || 'tareas_db2',
-  port:     process.env.MYSQLPORT     || process.env.MYSQL_PORT     || 3306,
-  charset:  'utf8mb4'
-});
-
-db.connect((err) => {
-  if (err) {
-    console.error('❌ Error conexión MySQL:', err.message);
-    return;
-  }
-  console.log('✅ Conectado a MySQL');
-
-  // 4. CREAR TABLAS SI NO EXISTEN
-  const crearTablas = [
-    // Tabla administradores PRIMERO (antes del seeding)
-    `CREATE TABLE IF NOT EXISTS administradores (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      nombre_usuario VARCHAR(100) NOT NULL UNIQUE,
-      password_hash VARCHAR(255) NOT NULL,
-      creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )`,
-    // Tabla usuarios (ANTES de tareas, por la FK)
-    `CREATE TABLE IF NOT EXISTS usuarios (
-      id VARCHAR(50) PRIMARY KEY,
-      nombre VARCHAR(100) NOT NULL,
-      avatar VARCHAR(255) DEFAULT 'avatar1.jpg',
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )`,
-    // Tabla tareas (con FK a usuarios)
-    `CREATE TABLE IF NOT EXISTS tareas (
-      id VARCHAR(50) PRIMARY KEY,
-      idUsuario VARCHAR(50) NOT NULL,
-      titulo VARCHAR(255) NOT NULL,
-      resumen TEXT,
-      expira DATE,
-      completada TINYINT(1) DEFAULT 0
-    )`,
-  ];
-
-  let tablasPendientes = crearTablas.length;
-  crearTablas.forEach((sql) => {
-    db.query(sql, (errCrear) => {
-      if (errCrear) {
-        console.error('❌ Error al crear tabla:', errCrear.message);
-        return;
-      }
-      tablasPendientes--;
-      if (tablasPendientes === 0) {
-        // 5. SEED — solo DESPUÉS de que todas las tablas existen
-        seedAdmin(db)
-          .then(() => seedUsuarios(db))
-          .catch((e) => console.error('❌ Seed falló:', e.message));
-      }
-    });
-  });
-});
 
 // ─────────────────────────────────────────────
 // 5. MIDDLEWARE DE AUTENTICACIÓN JWT (HS256)
@@ -393,7 +335,7 @@ app.delete('/tareas/:id', verifyToken, (req, res) => {
 // ─────────────────────────────────────────────
 // 8. ARRANQUE DEL SERVIDOR
 // ─────────────────────────────────────────────
-const port = process.env.PORT || 3000;
+const port = env.port;
 
 // El servidor siempre escucha — requerido por Railway en producción
 app.listen(port, '0.0.0.0', () => {

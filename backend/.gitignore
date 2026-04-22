@@ -1,0 +1,12 @@
+# Entornos
+.env
+
+# Dependencias
+node_modules/
+
+# Logs
+npm-debug.log
+yarn-error.log
+
+# Mac
+.DS_Store
