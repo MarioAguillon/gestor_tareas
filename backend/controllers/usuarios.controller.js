@@ -1,8 +1,18 @@
-const db = require('../db/connection');
+const { db } = require('../config/database');
+
+// Helper: Promisify db.query para usar async/await con la conexión centralizada
+function query(sql, params) {
+  return new Promise((resolve, reject) => {
+    db.query(sql, params, (err, results, fields) => {
+      if (err) return reject(err);
+      resolve([results, fields]);
+    });
+  });
+}
 
 exports.getUsuarios = async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM usuarios ORDER BY created_at ASC');
+    const [rows] = await query('SELECT * FROM usuarios ORDER BY created_at ASC');
     res.json(rows);
   } catch (error) {
     console.error('Error obteniendo usuarios:', error);
@@ -18,7 +28,7 @@ exports.crearUsuario = async (req, res) => {
 
   try {
     const defaultAvatar = avatar || 'avatar1.jpg';
-    await db.query('INSERT INTO usuarios (id, nombre, avatar) VALUES (?, ?, ?)', [id, nombre, defaultAvatar]);
+    await query('INSERT INTO usuarios (id, nombre, avatar) VALUES (?, ?, ?)', [id, nombre, defaultAvatar]);
     res.status(201).json({ mensaje: 'Usuario creado correctamente' });
   } catch (error) {
     console.error('Error guardando usuario:', error);
@@ -47,7 +57,7 @@ exports.editarUsuario = async (req, res) => {
     }
     sqlParams.push(id);
 
-    const [result] = await db.query(`UPDATE usuarios SET ${setQuery.join(', ')} WHERE id = ?`, sqlParams);
+    const [result] = await query(`UPDATE usuarios SET ${setQuery.join(', ')} WHERE id = ?`, sqlParams);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
@@ -63,7 +73,7 @@ exports.editarUsuario = async (req, res) => {
 exports.eliminarUsuario = async (req, res) => {
   const { id } = req.params;
   try {
-    const [result] = await db.query('DELETE FROM usuarios WHERE id = ?', [id]);
+    const [result] = await query('DELETE FROM usuarios WHERE id = ?', [id]);
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }

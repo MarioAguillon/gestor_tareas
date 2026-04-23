@@ -1,0 +1,56 @@
+# ═══════════════════════════════════════════════════
+# render.yaml — Tarea Fácil Backend (Render Blueprint)
+# Despliega el backend Node.js con TiDB Cloud como DB
+# ═══════════════════════════════════════════════════
+
+services:
+  - type: web
+    name: tarea-facil-api
+    runtime: node
+    region: ohio  # Más cercano a TiDB Cloud us-east-1
+
+    # ── Build ──
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node index.js
+
+    # ── Plan ──
+    plan: free
+
+    # ── Healthcheck ──
+    healthCheckPath: /
+
+    # ── Variables de Entorno ──
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        value: "10000"
+
+      # ── TiDB Cloud (tareasdb) ──
+      - key: DB_HOST
+        value: gateway01.us-east-1.prod.aws.tidbcloud.com
+
+      - key: DB_PORT
+        value: "4000"
+
+      - key: DB_USER
+        value: 3BcsJ5aEqyetByU.root
+
+      - key: DB_PASSWORD
+        sync: false  # Se configura manualmente en el dashboard de Render por seguridad
+
+      - key: DB_NAME
+        value: tareasdb
+
+      - key: DB_SSL
+        value: "true"
+
+      # ── Frontend CORS ──
+      - key: FRONTEND_URL
+        value: https://marioaguillon.github.io
+
+      # ── JWT Secret (configurar manualmente en Render Dashboard) ──
+      - key: JWT_SECRET
+        sync: false  # Valor sensible — se configura en el dashboard
